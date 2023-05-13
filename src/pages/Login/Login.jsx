@@ -1,12 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import image from '../../../src/assets/images/login/login.svg'
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Provider/AuthProvider';
 
 
 const Login = () => {
-
+    const [errors, setErrors] = useState('');
     const { userSignIn } = useContext(AuthContext);
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const from = location.state?.from?.pathname || '/';
 
     const handleLogin = event => {
         event.preventDefault();
@@ -19,9 +23,13 @@ const Login = () => {
         .then(result => {
             const loggedUser = result.user;
             console.log(loggedUser);
+            alert('Successfully Login')
+            setErrors('');
+            navigate(from, { replace: true });
         })
         .catch(error => {
             console.log(error.message);
+            setErrors(error.message)
         })
 
     }
@@ -41,13 +49,13 @@ const Login = () => {
                                 <label className="label">
                                     <span className="label-text">Email</span>
                                 </label>
-                                <input required type="email" name='email' placeholder="email" className="input input-bordered" />
+                                <input required type="email" name='email' placeholder="Email" className="input input-bordered" />
                             </div>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Password</span>
                                 </label>
-                                <input required type="password" name='password' placeholder="password" className="input input-bordered" />
+                                <input required type="password" name='password' placeholder="Password" className="input input-bordered" />
                                 <label className="label">
                                     <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                                 </label>
@@ -56,6 +64,7 @@ const Login = () => {
                                 <button type='submit' className="btn btn-primary">Login</button>
                             </div>
                         </form>
+                        <p className='text-red-600'>{errors}</p>
                         <p className='text-center py-4'>New to here ? Then <Link to='/signup' className='text-red-500 underline font-bold'>Sign Up</Link></p>
                     </div>
                 </div>

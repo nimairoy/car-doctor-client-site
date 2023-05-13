@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../../assets/logo.svg';
+import { AuthContext } from '../../../Provider/AuthProvider';
 
 const Navbar = () => {
+
+    const { user, logOut } = useContext(AuthContext);
+
+    const handleSingOut = () => {
+        logOut()
+            .then(result => {
+                alert('logout successfully')
+            })
+            .catch(err => {
+                console.log(err.message);
+            })
+    }
 
     const navItems = <>
         <li><Link to='/'>Home</Link></li>
@@ -30,6 +43,20 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end">
+                {
+                    user && user?.email
+                        ?
+                        <>
+
+                            <li style={{ listStyle: 'none', marginRight: '16px' }}><Link to='/checkouts'>Checkout lists</Link></li>
+                            <li style={{ listStyle: 'none' }} className='mr-4'><button onClick={handleSingOut} className='btn btn-warning' >Sign Out</button></li>
+                        </>
+                        :
+                        <>
+                        <li style={{ listStyle: 'none' }} className='mr-4'><Link className='btn btn-warning' to='/login'>Log in</Link></li>
+                        <li style={{ listStyle: 'none' }} className='mr-4'><Link className='btn btn-warning' to='/signup'>Signup</Link></li>
+                        </>
+                }
                 <button className="btn btn-outline btn-warning">Appointment</button>
             </div>
         </div>
