@@ -8,7 +8,7 @@ const CheckoutLists = () => {
     const [checkoutLists, setCheckoutLists] = useState([]);
     const navigate = useNavigate();
 
-    const url = `http://localhost:5000/checkouts?email=${user?.email}`
+    const url = `https://car-doctor-server-wine-nu.vercel.app/checkouts?email=${user?.email}`
     useEffect(() => {
         fetch(url, {
             method: 'GET',
@@ -32,7 +32,7 @@ const CheckoutLists = () => {
         const proceed = confirm('Are you Sure! You want to delete?');
 
         if (proceed) {
-            fetch(`http://localhost:5000/checkouts/${id}`, {
+            fetch(`https://car-doctor-server-wine-nu.vercel.app/checkouts/${id}`, {
                 method: 'DELETE'
             })
                 .then(res => res.json())
@@ -49,7 +49,7 @@ const CheckoutLists = () => {
 
     // handle checkout pending 
     const handleCheckoutPending = id => {
-        fetch(`http://localhost:5000/checkouts/${id}`, {
+        fetch(`https://car-doctor-server-wine-nu.vercel.app/checkouts/${id}`, {
             method: 'PATCH',
             headers: {
                 'content-type': 'application/json'

@@ -28,7 +28,7 @@ const CheckOut = () => {
         }
         console.log(checkOutInfo)
 
-        fetch(`http://localhost:5000/checkouts`, {
+        fetch(`https://car-doctor-server-wine-nu.vercel.app/checkouts`, {
 
             method: 'POST',
             headers: {
