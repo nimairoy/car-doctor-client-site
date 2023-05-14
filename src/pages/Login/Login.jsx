@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import image from '../../../src/assets/images/login/login.svg'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Provider/AuthProvider';
+import SocialLogin from '../Shared/SocialLogin/SocialLogin';
 
 
 const Login = () => {
@@ -20,17 +21,17 @@ const Login = () => {
 
         console.log(email, password)
         userSignIn(email, password)
-        .then(result => {
-            const loggedUser = result.user;
-            console.log(loggedUser);
-            alert('Successfully Login')
-            setErrors('');
-            navigate(from, { replace: true });
-        })
-        .catch(error => {
-            console.log(error.message);
-            setErrors(error.message)
-        })
+            .then(result => {
+                const user = result.user;
+                // console.log(user);                
+                navigate(from, { replace: true });
+                alert('Successfully Login')
+                setErrors('');
+            })
+            .catch(error => {
+                console.log(error.message);
+                setErrors(error.message)
+            })
 
     }
 
@@ -64,8 +65,9 @@ const Login = () => {
                                 <button type='submit' className="btn btn-primary">Login</button>
                             </div>
                         </form>
-                        <p className='text-red-600'>{errors}</p>
+                        {errors && <p className='text-red-600'>{errors}</p>}
                         <p className='text-center py-4'>New to here ? Then <Link to='/signup' className='text-red-500 underline font-bold'>Sign Up</Link></p>
+                        <SocialLogin></SocialLogin>
                     </div>
                 </div>
             </div>

@@ -1,17 +1,30 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../Provider/AuthProvider';
 import CheckoutRow from './CheckoutRow';
+import { useNavigate } from 'react-router-dom';
 
 const CheckoutLists = () => {
     const { user } = useContext(AuthContext);
-
     const [checkoutLists, setCheckoutLists] = useState([]);
+    const navigate = useNavigate();
 
     const url = `http://localhost:5000/checkouts?email=${user?.email}`
     useEffect(() => {
-        fetch(url)
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('car-access-token')}`
+            }
+        })
             .then(res => res.json())
-            .then(data => setCheckoutLists(data))
+            .then(data => {
+                if (!data.error) {
+                    setCheckoutLists(data)
+                }
+                else{
+                    navigate('/');
+                }
+            })
     }, [url])
 
     // handle delete 
@@ -39,22 +52,22 @@ const CheckoutLists = () => {
         fetch(`http://localhost:5000/checkouts/${id}`, {
             method: 'PATCH',
             headers: {
-                'content-type' : 'application/json'
+                'content-type': 'application/json'
             },
-            body: JSON.stringify({status: 'confirm'})
+            body: JSON.stringify({ status: 'confirm' })
         })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-            if(data.modifiedCount > 0){
-                // update status
-                const remaining = checkoutLists.filter(checkoutList => checkoutList._id !== id);
-                const updated = checkoutLists.find(checkoutList => checkoutList._id === id);
-                updated.status = 'confirm';
-                const newCheckouts = [updated, ...remaining];
-                setCheckoutLists(newCheckouts);
-            }
-        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                if (data.modifiedCount > 0) {
+                    // update status
+                    const remaining = checkoutLists.filter(checkoutList => checkoutList._id !== id);
+                    const updated = checkoutLists.find(checkoutList => checkoutList._id === id);
+                    updated.status = 'confirm';
+                    const newCheckouts = [updated, ...remaining];
+                    setCheckoutLists(newCheckouts);
+                }
+            })
     }
 
 
